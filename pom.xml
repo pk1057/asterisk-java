@@ -4,7 +4,7 @@
 	<groupId>org.asteriskjava</groupId>
 	<artifactId>asterisk-java</artifactId>
 	<name>Asterisk-Java</name>
-	<version>3.0.0-SNAP-SHOT</version>
+	<version>3.0.0-EDAG-SNAP-SHOT</version>
 	<description>The free Java library for Asterisk PBX integration.</description>
 	<inceptionYear>2004</inceptionYear>
 
@@ -82,15 +82,12 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.5</version>
-				<configuration>
-					<useDefaultManifestFile>true</useDefaultManifestFile>
-				</configuration>
+				<version>3.0.2</version>
 			</plugin>
 			<plugin>
 				<groupId>biz.aQute.bnd</groupId>
 				<artifactId>bnd-maven-plugin</artifactId>
-				<version>3.2.0</version>
+				<version>4.3.0</version>
 				<executions>
 					<execution>
 						<goals>
@@ -113,7 +110,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.2</version>
+				<version>3.8.1</version>
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
@@ -121,11 +118,11 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.18</version>
+				<version>3.0.0-M3</version>
 			</plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.5.3</version>
+				<version>3.2.0</version>
 				<configuration>
 					<descriptors>
 						<descriptor>${project.basedir}/src/main/assembly/bin.xml</descriptor>
@@ -136,7 +133,7 @@
 						<id>make-assembly</id>
 						<phase>package</phase>
 						<goals>
-							<goal>attached</goal>
+							<goal>single</goal>
 						</goals>
 					</execution>
 				</executions>
@@ -247,4 +244,15 @@
 			</build>
 		</profile>
 	</profiles>
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <configLocation>config/sun_checks.xml</configLocation>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
 </project>
