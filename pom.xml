@@ -1,12 +1,19 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.asteriskjava</groupId>
 	<artifactId>asterisk-java</artifactId>
 	<name>Asterisk-Java</name>
-	<version>3.0.2-SNAPSHOT</version>
+	<version>${releaseVersion}</version>
 	<description>The free Java library for Asterisk PBX integration.</description>
 	<inceptionYear>2004</inceptionYear>
+
+
+	<properties>
+        <releaseVersion>3.0.23-SNAPSHOT</releaseVersion>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 
 	<licenses>
 		<license>
@@ -70,18 +77,14 @@
 		<url>https://github.com/asterisk-java/asterisk-java</url>
 	</scm>
 	<distributionManagement>
-		<repository>
-			<!-- these properties are stored in settings.xml, this is handy if you want to deploy to your own repository -->
-			<id>${distribution.id}</id>
-			<name>${distribution.name}</name>
-			<url>${distribution.url}</url>
-		</repository>
 		<snapshotRepository>
-			<!-- these properties are stored in settings.xml, this is handy if you want to deploy to your own repository -->
-			<id>${snapshot.distribution.id}</id>
-			<name>${snapshot.distribution.name}</name>
-			<url>${snapshot.distribution.url}</url>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
 		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+		</repository>
 	</distributionManagement>
 	<build>
 		<plugins>
@@ -126,8 +129,9 @@
 				</configuration>
 			</plugin>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.18</version>
+				<version>3.0.0-M4</version>
 			</plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -144,27 +148,6 @@
 						<goals>
 							<goal>attached</goal>
 						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<artifactId>maven-source-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<phase>deploy</phase>
-						<goals><goal>jar-no-fork</goal></goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<!-- explicitly define maven-deploy-plugin after other to force exec order -->
-				<artifactId>maven-deploy-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>deploy</id>
-						<phase>deploy</phase>
-						<goals><goal>deploy</goal></goals>
 					</execution>
 				</executions>
 			</plugin>
@@ -202,10 +185,15 @@
 			<version>1.1.2</version>
 			<scope>test</scope>
 		</dependency>
+		 <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.9.12</version>
+        </dependency>
 	</dependencies>
 	<profiles>
 		<profile>
-			<id>release</id>
+			<id>deploy</id>
 			<build>
 				<plugins>
 					<plugin>
@@ -224,7 +212,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>2.10.1</version>
+						<version>2.10.3</version>
 						<executions>
 							<execution>
 								<id>attach-javadocs</id>
@@ -234,6 +222,13 @@
 							</execution>
 						</executions>
 						<configuration>
+
+							<additionalparam>-Xdoclint:none</additionalparam>
+							<additionalOptions>-Xdoclint:none</additionalOptions>
+							<additionalJOptions>
+								<additionalparam>-Xdoclint:none</additionalparam>
+							</additionalJOptions>
+
 							<groups>
 								<group>
 									<title>Core Packages</title>
@@ -251,10 +246,11 @@
 							<header>${project.name}</header>
 						</configuration>
 					</plugin>
+
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-gpg-plugin</artifactId>
-						<version>1.5</version>
+						<version>1.6</version>
 						<configuration>
 							<keyname>EA919AF2</keyname>
 						</configuration>
@@ -262,13 +258,29 @@
 							<execution>
 								<id>sign-artifacts</id>
 								<phase>verify</phase>
-
 								<goals>
 									<goal>sign</goal>
-
 								</goals>
+								<configuration>
+									<!-- Prevent `gpg` from using pinentry programs -->
+									<gpgArguments>
+										<arg>--pinentry-mode</arg>
+										<arg>loopback</arg>
+									</gpgArguments>
+								</configuration>
 							</execution>
 						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.sonatype.plugins</groupId>
+						<artifactId>nexus-staging-maven-plugin</artifactId>
+						<version>1.6.7</version>
+						<extensions>true</extensions>
+						<configuration>
+							<serverId>ossrh</serverId>
+							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+							<autoReleaseAfterClose>true</autoReleaseAfterClose>
+						</configuration>
 					</plugin>
 				</plugins>
 			</build>
