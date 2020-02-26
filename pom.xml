@@ -85,21 +85,24 @@
 			<id>ossrh</id>
 			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
 		</repository>
+		<snapshotRepository>
+			<!-- these properties are stored in settings.xml, this is handy if you want to deploy to your own repository -->
+			<id>${snapshot.distribution.id}</id>
+			<name>${snapshot.distribution.name}</name>
+			<url>${snapshot.distribution.url}</url>
+		</snapshotRepository>
 	</distributionManagement>
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.5</version>
-				<configuration>
-					<useDefaultManifestFile>true</useDefaultManifestFile>
-				</configuration>
+				<version>3.0.2</version>
 			</plugin>
 			<plugin>
 				<groupId>biz.aQute.bnd</groupId>
 				<artifactId>bnd-maven-plugin</artifactId>
-				<version>3.2.0</version>
+				<version>4.3.0</version>
 				<executions>
 					<execution>
 						<goals>
@@ -122,7 +125,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.2</version>
+				<version>3.8.1</version>
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
@@ -135,7 +138,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.5.3</version>
+				<version>3.2.0</version>
 				<configuration>
 					<descriptors>
 						<descriptor>${project.basedir}/src/main/assembly/bin.xml</descriptor>
@@ -146,8 +149,29 @@
 						<id>make-assembly</id>
 						<phase>package</phase>
 						<goals>
-							<goal>attached</goal>
+							<goal>single</goal>
 						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<phase>deploy</phase>
+						<goals><goal>jar-no-fork</goal></goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<!-- explicitly define maven-deploy-plugin after other to force exec order -->
+				<artifactId>maven-deploy-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>deploy</id>
+						<phase>deploy</phase>
+						<goals><goal>deploy</goal></goals>
 					</execution>
 				</executions>
 			</plugin>
@@ -286,4 +310,15 @@
 			</build>
 		</profile>
 	</profiles>
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <configLocation>config/sun_checks.xml</configLocation>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
 </project>

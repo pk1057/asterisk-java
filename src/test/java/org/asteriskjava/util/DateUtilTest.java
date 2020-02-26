@@ -1,11 +1,9 @@
 package org.asteriskjava.util;
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.Date;
 import java.util.TimeZone;
-
 import org.junit.After;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 

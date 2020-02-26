@@ -1,12 +1,10 @@
 package org.asteriskjava.manager.response;
 
+import java.util.TimeZone;
+import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-
-import java.util.TimeZone;
-
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
