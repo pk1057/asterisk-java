@@ -62,7 +62,7 @@ public class ManagerReaderImplTest
     }
 
     @After
-    public void tearDown()
+    public static void tearDown()
     {
         DateUtil.overrideCurrentDate(null);
     }

@@ -30,7 +30,7 @@ public class AsteriskServerTestCase extends TestCase
     }
 
     @Override
-    public void tearDown() throws Exception
+    public static void tearDown() throws Exception
     {
         server.getManagerConnection().logoff();
     }

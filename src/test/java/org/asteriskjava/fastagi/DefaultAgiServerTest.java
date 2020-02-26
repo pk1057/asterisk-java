@@ -16,17 +16,15 @@
  */
 package org.asteriskjava.fastagi;
 
+import java.io.IOException;
+import org.asteriskjava.util.ServerSocketFacade;
+import org.asteriskjava.util.SocketConnectionFacade;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
-import static org.junit.Assert.assertEquals;
-
-import java.io.IOException;
-
-import org.asteriskjava.util.ServerSocketFacade;
-import org.asteriskjava.util.SocketConnectionFacade;
 import org.junit.After;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
